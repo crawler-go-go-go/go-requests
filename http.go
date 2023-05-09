@@ -26,21 +26,20 @@ func SendRequest[Request any, Response any](ctx context.Context, options *Option
 
 	// TODO set default params
 
+	var zero Response
 	var lastErr error
 	for tryTimes := 0; tryTimes < options.MaxTryTimes; tryTimes++ {
 		var client http.Client
 		httpRequest, err := http.NewRequest(options.Method, options.TargetURL, bytes.NewReader(options.Body))
 		if err != nil {
-			lastErr = err
-			continue
+			return zero, err
 		}
 
 		httpRequest = httpRequest.WithContext(ctx)
 
 		for _, requestSettingFunc := range options.RequestSettingSlice {
 			if err := requestSettingFunc(httpRequest); err != nil {
-				lastErr = err
-				continue
+				return zero, err
 			}
 		}
 
@@ -59,6 +58,5 @@ func SendRequest[Request any, Response any](ctx context.Context, options *Option
 		return response, nil
 	}
 
-	var zero Response
 	return zero, lastErr
 }
