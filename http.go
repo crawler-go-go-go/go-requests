@@ -9,12 +9,12 @@ import (
 // DefaultMaxTryTimes 默认情况下的最大重试次数
 const DefaultMaxTryTimes = 3
 
-type RequestSetting func(httpRequest *http.Request) error
+type RequestSetting func(client *http.Client, request *http.Request) error
 
 const DefaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36"
 
 func DefaultUserAgentRequestSetting() RequestSetting {
-	return func(httpRequest *http.Request) error {
+	return func(client *http.Client, httpRequest *http.Request) error {
 		httpRequest.Header.Set("User-Agent", DefaultUserAgent)
 		return nil
 	}
@@ -38,7 +38,7 @@ func SendRequest[Request any, Response any](ctx context.Context, options *Option
 		httpRequest = httpRequest.WithContext(ctx)
 
 		for _, requestSettingFunc := range options.RequestSettingSlice {
-			if err := requestSettingFunc(httpRequest); err != nil {
+			if err := requestSettingFunc(&client, httpRequest); err != nil {
 				return zero, err
 			}
 		}

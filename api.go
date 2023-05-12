@@ -33,8 +33,8 @@ func GetJson[Response any](ctx context.Context, targetUrl string, options ...*Op
 
 	options[0] = options[0].WithTargetURL(targetUrl).
 		WithJsonResponseHandler().
-		AppendRequestSetting(func(httpRequest *http.Request) error {
-			httpRequest.Header.Set("Content-Type", "application/json")
+		AppendRequestSetting(func(client *http.Client, request *http.Request) error {
+			request.Header.Set("Content-Type", "application/json")
 			return nil
 		})
 
@@ -55,8 +55,8 @@ func PostJson[Request any, Response any](ctx context.Context, targetUrl string, 
 
 	options[0] = options[0].WithTargetURL(targetUrl).
 		WithJsonResponseHandler().
-		AppendRequestSetting(func(httpRequest *http.Request) error {
-			httpRequest.Header.Set("Content-Type", "application/json")
+		AppendRequestSetting(func(client *http.Client, request *http.Request) error {
+			request.Header.Set("Content-Type", "application/json")
 			return nil
 		}).
 		WithBody(marshal)
