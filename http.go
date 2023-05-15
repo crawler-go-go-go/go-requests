@@ -3,6 +3,7 @@ package requests
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
 	"net/http"
 )
 
@@ -30,6 +31,12 @@ func SendRequest[Request any, Response any](ctx context.Context, options *Option
 	var lastErr error
 	for tryTimes := 0; tryTimes < options.MaxTryTimes; tryTimes++ {
 		var client http.Client
+
+		// 忽略证书验证 
+		client.Transport = &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		}
+
 		httpRequest, err := http.NewRequest(options.Method, options.TargetURL, bytes.NewReader(options.Body))
 		if err != nil {
 			return zero, err
