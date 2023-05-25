@@ -19,7 +19,7 @@ func NewOptions[Request any, Response any](targetUrl string, responseHandler Res
 		TargetURL:           targetUrl,
 		Method:              DefaultMethod,
 		Body:                []byte{},
-		RequestSettingSlice: nil,
+		RequestSettingSlice: []RequestSetting{DefaultRequestSetting()},
 		ResponseHandler:     responseHandler,
 	}
 }
@@ -71,5 +71,3 @@ func (x *Options[Request, Response]) WithJsonResponseHandler() *Options[Request,
 	x.ResponseHandler = JsonResponseHandler[Response]()
 	return x
 }
-
-
