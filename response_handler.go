@@ -15,7 +15,7 @@ func BytesResponseHandler(readResponseOnStatusCodeIn ...int) ResponseHandler[[]b
 
 	// By default, the response body is read only when the status code is 200
 	if len(readResponseOnStatusCodeIn) == 0 {
-		readResponseOnStatusCodeIn = append(readResponseOnStatusCodeIn, http.StatusOK)
+		readResponseOnStatusCodeIn = append(readResponseOnStatusCodeIn, http.StatusOK, http.StatusNotFound)
 	}
 
 	return func(httpResponse *http.Response) ([]byte, error) {
